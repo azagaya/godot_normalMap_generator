@@ -9,9 +9,9 @@
 shader = ExtResource( 2 )
 shader_param/normal_preview = false
 shader_param/emboss_height = 0.05
-shader_param/bump_height = 0.2
+shader_param/bump_height = 0.18
 shader_param/blur = 2.0
-shader_param/bump = 31.0
+shader_param/bump = 19.0
 shader_param/invertX = true
 shader_param/invertY = true
 shader_param/with_distance = true
