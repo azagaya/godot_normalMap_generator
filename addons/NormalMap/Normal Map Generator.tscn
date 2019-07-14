@@ -8,10 +8,10 @@
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
 shader_param/normal_preview = false
-shader_param/emboss_height = 0.5
-shader_param/bump_height = 0.9
-shader_param/blur = 1.0
-shader_param/bump = 12.0
+shader_param/emboss_height = 0.05
+shader_param/bump_height = 0.2
+shader_param/blur = 2.0
+shader_param/bump = 31.0
 shader_param/invertX = true
 shader_param/invertY = true
 shader_param/with_distance = true
@@ -34,19 +34,24 @@ mode = 0
 
 [node name="ViewportContainer" type="ViewportContainer" parent="VBoxContainer"]
 margin_right = 138.0
+margin_bottom = 128.0
 size_flags_horizontal = 15
 size_flags_vertical = 15
 
 [node name="Viewport" type="Viewport" parent="VBoxContainer/ViewportContainer"]
+size = Vector2( 128, 128 )
 own_world = true
 transparent_bg = true
+handle_input_locally = false
 hdr = false
 disable_3d = true
 usage = 0
+render_target_update_mode = 3
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/ViewportContainer/Viewport"]
 light_mask = 2
 material = SubResource( 1 )
+mouse_default_cursor_shape = 3
 texture = ExtResource( 3 )
 stretch_mode = 6
 
@@ -59,51 +64,51 @@ range_height = 15.0
 range_item_cull_mask = 2
 
 [node name="TextureButton" type="Button" parent="VBoxContainer"]
-margin_top = 4.0
+margin_top = 132.0
 margin_right = 138.0
-margin_bottom = 24.0
+margin_bottom = 152.0
 text = "Texture..."
 
 [node name="Normal" type="CheckBox" parent="VBoxContainer"]
-margin_top = 28.0
+margin_top = 156.0
 margin_right = 138.0
-margin_bottom = 52.0
+margin_bottom = 180.0
 text = "Normal Preview"
 
 [node name="Emboss" type="CheckBox" parent="VBoxContainer"]
-margin_top = 56.0
+margin_top = 184.0
 margin_right = 138.0
-margin_bottom = 80.0
+margin_bottom = 208.0
 pressed = true
 text = "Emboss:"
 
 [node name="Emboss Height" type="HSlider" parent="VBoxContainer"]
-margin_top = 84.0
+margin_top = 212.0
 margin_right = 138.0
-margin_bottom = 100.0
+margin_bottom = 228.0
 max_value = 2.0
-step = 0.1
+step = 0.01
 value = 0.1
 
 [node name="Bump" type="CheckBox" parent="VBoxContainer"]
-margin_top = 104.0
+margin_top = 232.0
 margin_right = 138.0
-margin_bottom = 128.0
+margin_bottom = 256.0
 pressed = true
 text = "Bump:"
 
 [node name="Bump Height" type="HSlider" parent="VBoxContainer"]
-margin_top = 132.0
+margin_top = 260.0
 margin_right = 138.0
-margin_bottom = 148.0
+margin_bottom = 276.0
 max_value = 2.0
-step = 0.1
+step = 0.01
 value = 0.1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 152.0
+margin_top = 280.0
 margin_right = 138.0
-margin_bottom = 176.0
+margin_bottom = 304.0
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
 margin_top = 5.0
@@ -121,9 +126,9 @@ rounded = true
 suffix = "px"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 180.0
+margin_top = 308.0
 margin_right = 138.0
-margin_bottom = 204.0
+margin_bottom = 332.0
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2"]
 margin_top = 5.0
@@ -140,25 +145,27 @@ rounded = true
 suffix = "px"
 
 [node name="InvertX" type="CheckBox" parent="VBoxContainer"]
-margin_top = 208.0
+margin_top = 336.0
 margin_right = 138.0
-margin_bottom = 232.0
+margin_bottom = 360.0
 pressed = true
 text = "Invert X"
 
 [node name="InvertY" type="CheckBox" parent="VBoxContainer"]
-margin_top = 236.0
+margin_top = 364.0
 margin_right = 138.0
-margin_bottom = 260.0
+margin_bottom = 388.0
 pressed = true
 text = "Invert Y"
 
 [node name="Button" type="Button" parent="VBoxContainer"]
-margin_top = 264.0
+margin_top = 392.0
 margin_right = 138.0
-margin_bottom = 284.0
+margin_bottom = 412.0
 text = "Generate"
 [connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
+[connection signal="mouse_entered" from="VBoxContainer/ViewportContainer/Viewport/TextureRect" to="." method="_on_TextureRect_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ViewportContainer/Viewport/TextureRect" to="." method="_on_TextureRect_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/TextureButton" to="." method="_on_TextureButton_pressed"]
 [connection signal="toggled" from="VBoxContainer/Normal" to="." method="_on_Normal_toggled"]
 [connection signal="toggled" from="VBoxContainer/Emboss" to="." method="_on_Emboss_toggled"]

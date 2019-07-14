@@ -4,12 +4,18 @@ extends Control
 var texture_rect
 var viewport
 var current_path = "./generated.png"
+var track_mouse = false
 
 func _ready():
 	texture_rect = $VBoxContainer/ViewportContainer/Viewport/TextureRect
 	viewport = $VBoxContainer/ViewportContainer/Viewport
 	viewport.size = texture_rect.texture.get_size()
-	pass
+
+func _process(delta):
+	if (track_mouse):
+		if Input.is_action_pressed("click"):
+			print("click")
+			$VBoxContainer/ViewportContainer/Viewport/TextureRect/Light2D.global_position = get_global_mouse_position()
 
 func _on_Normal_toggled(button_pressed):
 	texture_rect.material.set_shader_param("normal_preview",button_pressed)
@@ -47,13 +53,9 @@ func _on_InvertY_toggled(button_pressed):
 
 
 func _on_Button_pressed():
-	var pressed = texture_rect.material.get_shader_param("normal_preview")
-	update()
-	texture_rect.material.set_shader_param("normal_preview",true)
 	var img = viewport.get_texture().get_data()
 	img.flip_y()
-	print(img.save_png("./generated_n"))
-	texture_rect.material.set_shader_param("normal_preview",pressed)
+	print(img.save_png(current_path))
 
 func _on_TextureButton_pressed():
 	$FileDialog.popup()
@@ -66,3 +68,9 @@ func _on_FileDialog_file_selected(path):
 		texture_rect.texture = itex
 		var aux = path.rsplit(".",true,1)
 		current_path = aux[0]+"_n."+aux[1]
+
+func _on_TextureRect_mouse_entered():
+	track_mouse = true;
+
+func _on_TextureRect_mouse_exited():
+	track_mouse = false;
