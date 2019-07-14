@@ -8,10 +8,10 @@
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
 shader_param/normal_preview = false
-shader_param/emboss_height = 1.06
+shader_param/emboss_height = 0.08
 shader_param/bump_height = 0.95
 shader_param/blur = 1.0
-shader_param/bump = 2.0
+shader_param/bump = 10
 shader_param/invertX = true
 shader_param/invertY = true
 shader_param/with_distance = true
@@ -28,7 +28,7 @@ script = ExtResource( 1 )
 margin_top = 4.0
 margin_right = 274.0
 margin_bottom = 204.0
-window_title = "Open a File"
+window_title = "Abrir un archivo"
 resizable = true
 mode = 0
 
@@ -67,7 +67,6 @@ stretch_mode = 6
 position = Vector2( 127.877, 11.4031 )
 texture = ExtResource( 4 )
 color = Color( 1, 0.984314, 0, 1 )
-energy = 2.06
 range_height = 15.0
 range_item_cull_mask = 2
 
@@ -172,7 +171,6 @@ rounded = true
 suffix = "px"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="GUI"]
-editor/display_folded = true
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
