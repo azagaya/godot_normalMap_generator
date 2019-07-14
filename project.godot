@@ -18,10 +18,6 @@ _global_script_class_icons={
 config/name="NormalMap"
 config/icon="res://icon.png"
 
-[editor_plugins]
-
-enabled=PoolStringArray( "NormalMap" )
-
 [input]
 
 click={
