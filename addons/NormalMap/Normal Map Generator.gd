@@ -72,7 +72,7 @@ func _on_FileDialog_file_selected(path):
 		itex.create_from_image(img)
 		texture_rect.texture = itex
 		var aux = path.rsplit(".",true,1)
-		current_path = aux[0]+"_n."+aux[1]
+		current_path = aux[0]+"_n.png"
 		
 		# Change viewport size to match the new image size
 		$GUI/ViewportContainer/Viewport.size = img.get_size();

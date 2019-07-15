@@ -2,7 +2,7 @@ shader_type canvas_item;
 
 uniform bool normal_preview = false;
 uniform float emboss_height : hint_range(0,100) = 0.1;
-uniform float bump_height : hint_range(0,100) = 0.1;
+uniform float bump_height : hint_range(0,100) = 0.3;
 uniform int blur : hint_range(0,10) = 1;
 uniform int bump : hint_range(0,100) = 10;
 

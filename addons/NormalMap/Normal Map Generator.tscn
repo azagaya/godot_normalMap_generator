@@ -7,10 +7,10 @@
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
-shader_param/normal_preview = false
-shader_param/emboss_height = 0.08
-shader_param/bump_height = 0.95
-shader_param/blur = 1.0
+shader_param/normal_preview = true
+shader_param/emboss_height = 0.1
+shader_param/bump_height = 0.3
+shader_param/blur = 1
 shader_param/bump = 10
 shader_param/invertX = true
 shader_param/invertY = true
@@ -61,7 +61,7 @@ light_mask = 2
 material = SubResource( 1 )
 mouse_default_cursor_shape = 3
 texture = ExtResource( 3 )
-stretch_mode = 6
+stretch_mode = 5
 
 [node name="Light2D" type="Light2D" parent="GUI/ViewportContainer/Viewport/TextureRect"]
 position = Vector2( 127.877, 11.4031 )
