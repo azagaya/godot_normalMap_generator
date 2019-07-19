@@ -14,17 +14,17 @@ colors = PoolColorArray( 0.0392157, 0.0509804, 0.192157, 1, 0.133333, 0.133333, 
 [sub_resource type="GradientTexture" id=2]
 gradient = SubResource( 1 )
 
-[sub_resource type="ViewportTexture" id=17]
+[sub_resource type="ViewportTexture" id=3]
 
-[sub_resource type="ShaderMaterial" id=16]
+[sub_resource type="ShaderMaterial" id=4]
 shader = ExtResource( 2 )
 shader_param/normal_preview = false
-shader_param/normal_texture = SubResource( 17 )
+shader_param/normal_texture = SubResource( 3 )
 
 [sub_resource type="ShaderMaterial" id=5]
 shader = ExtResource( 5 )
 
-[sub_resource type="ViewportTexture" id=18]
+[sub_resource type="ViewportTexture" id=6]
 
 [sub_resource type="ShaderMaterial" id=7]
 shader = ExtResource( 6 )
@@ -36,7 +36,7 @@ shader_param/invertX = true
 shader_param/invertY = true
 shader_param/with_distance = true
 shader_param/with_emboss = true
-shader_param/distanceTex = SubResource( 18 )
+shader_param/distanceTex = SubResource( 6 )
 
 [node name="Normal Map Generator" type="Control"]
 anchor_right = 1.0
@@ -88,7 +88,7 @@ expand = true
 
 [node name="TextureRect" type="TextureRect" parent="GUI/ViewportContainer/Viewport"]
 light_mask = 2
-material = SubResource( 16 )
+material = SubResource( 4 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 texture = ExtResource( 3 )
