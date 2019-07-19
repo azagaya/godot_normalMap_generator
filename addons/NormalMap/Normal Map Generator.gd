@@ -10,7 +10,7 @@ var distance_texture;
 
 
 func _ready():
-	texture_rect = $GUI/ViewportContainer/Viewport/TextureRect
+	texture_rect = $ViewportNormal/Normal
 	viewport = $GUI/ViewportContainer/Viewport
 	viewport.size = texture_rect.texture.get_size()
 	
@@ -25,9 +25,10 @@ func _ready():
 	light2d_node = $GUI/ViewportContainer/Viewport/TextureRect/Light2D
 	viewport_container_node = $GUI/ViewportContainer
 	$GUI/HBoxContainer_ColorPicker/ColorPickerButton.color = light2d_node.color
+	$GUI/ViewportContainer/Viewport/TextureRect.material.set_shader_param("normal_texture", $ViewportNormal.get_texture())
 
 func _on_Normal_toggled(button_pressed):
-	texture_rect.material.set_shader_param("normal_preview",button_pressed)
+	$GUI/ViewportContainer/Viewport/TextureRect.material.set_shader_param("normal_preview",button_pressed)
 
 
 func _on_Emboss_toggled(button_pressed):
@@ -62,8 +63,10 @@ func _on_InvertY_toggled(button_pressed):
 
 
 func _on_Button_pressed():
-	var img = viewport.get_texture().get_data()
-	img.flip_y()
+	$ViewportNormal.size = $ViewportNormal/Normal.texture.get_size()
+	$ViewportNormal/Normal.position = $ViewportNormal.size/2;
+
+	var img = $ViewportNormal.get_texture().get_data()
 	img.save_png(current_path)
 
 
@@ -78,7 +81,6 @@ func _on_FileDialog_file_selected(path):
 	var itex = ImageTexture.new()
 	if (!img.load(path)):
 		itex.create_from_image(img)
-		texture_rect.texture = itex
 		var aux = path.rsplit(".",true,1)
 		current_path = aux[0]+"_n.png"
 		# Create and Load new distance
@@ -86,9 +88,14 @@ func _on_FileDialog_file_selected(path):
 		$ViewportDistance.size = $ViewportDistance/Distance.texture.get_size()
 		$ViewportDistance/Distance.position = $ViewportDistance.size/2;
 		$ViewportDistance.render_target_update_mode = Viewport.UPDATE_ONCE
-	
+		
+		texture_rect.texture = itex
+		$ViewportNormal.size = texture_rect.texture.get_size()
+		texture_rect.position = $ViewportNormal.size/2;
+		
 		distance_texture = $ViewportDistance.get_texture()
-	
+
+		$GUI/ViewportContainer/Viewport/TextureRect.texture = itex
 		texture_rect.material.set_shader_param("distanceTex", distance_texture)
 		# Change viewport size to match the new image size
 		# Commented this out because i think viewports inside container cannot be resized...

@@ -1,6 +1,5 @@
 shader_type canvas_item;
 
-uniform bool normal_preview = false;
 uniform float emboss_height : hint_range(0,100) = 0.1;
 uniform float bump_height : hint_range(0,100) = 0.3;
 uniform int blur : hint_range(0,10) = 5;
@@ -83,17 +82,6 @@ void fragment() {
 
 	normal = 0.5*normalize(normal+normal_b)+0.5;
 
-	if (!normal_preview)
-		COLOR = tex;
-	else 
-		COLOR = vec4(normal,tex.a);
+	COLOR = vec4(normal,tex.a);
 
-	NORMAL = normal * 2.0 - 1.0;
-	//COLOR = vec4(vec3(distx0),tex.a);
-}
-
-void light(){
-	if (normal_preview){
-		LIGHT = vec4(0.0);
-	}
 }
