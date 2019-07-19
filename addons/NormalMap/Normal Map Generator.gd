@@ -6,6 +6,7 @@ var viewport
 var current_path = "./generated.png"
 var light2d_node = null
 var viewport_container_node = null
+var distance_texture;
 
 
 func _ready():
@@ -13,10 +14,17 @@ func _ready():
 	viewport = $GUI/ViewportContainer/Viewport
 	viewport.size = texture_rect.texture.get_size()
 	
+	$ViewportDistance.size = $ViewportDistance/Distance.texture.get_size()
+	$ViewportDistance/Distance.position = $ViewportDistance.size/2;
+	$ViewportDistance.render_target_update_mode = Viewport.UPDATE_ONCE
+	
+	distance_texture = $ViewportDistance.get_texture()
+	
+	texture_rect.material.set_shader_param("distanceTex", distance_texture)
+	
 	light2d_node = $GUI/ViewportContainer/Viewport/TextureRect/Light2D
 	viewport_container_node = $GUI/ViewportContainer
 	$GUI/HBoxContainer_ColorPicker/ColorPickerButton.color = light2d_node.color
-
 
 func _on_Normal_toggled(button_pressed):
 	texture_rect.material.set_shader_param("normal_preview",button_pressed)
@@ -56,7 +64,7 @@ func _on_InvertY_toggled(button_pressed):
 func _on_Button_pressed():
 	var img = viewport.get_texture().get_data()
 	img.flip_y()
-	print(img.save_png(current_path))
+	img.save_png(current_path)
 
 
 func _on_TextureButton_pressed():
@@ -73,9 +81,18 @@ func _on_FileDialog_file_selected(path):
 		texture_rect.texture = itex
 		var aux = path.rsplit(".",true,1)
 		current_path = aux[0]+"_n.png"
-		
+		# Create and Load new distance
+		$ViewportDistance/Distance.texture = itex
+		$ViewportDistance.size = $ViewportDistance/Distance.texture.get_size()
+		$ViewportDistance/Distance.position = $ViewportDistance.size/2;
+		$ViewportDistance.render_target_update_mode = Viewport.UPDATE_ONCE
+	
+		distance_texture = $ViewportDistance.get_texture()
+	
+		texture_rect.material.set_shader_param("distanceTex", distance_texture)
 		# Change viewport size to match the new image size
-		$GUI/ViewportContainer/Viewport.size = img.get_size();
+		# Commented this out because i think viewports inside container cannot be resized...
+		#$GUI/ViewportContainer/Viewport.size = img.get_size();
 
 
 # Used for tracking the mouse and other input events.
@@ -105,3 +122,7 @@ func _input(event):
 # Changes the Light2D node color based on input from the ColorPickerButton
 func _on_ColorPickerButton_color_changed(color):
 	light2d_node.color = color
+
+
+func _on_SpinBoxLightScale_value_changed(value):
+	light2d_node.texture_scale = value

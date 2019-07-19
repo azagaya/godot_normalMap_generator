@@ -3,13 +3,15 @@ shader_type canvas_item;
 uniform bool normal_preview = false;
 uniform float emboss_height : hint_range(0,100) = 0.1;
 uniform float bump_height : hint_range(0,100) = 0.3;
-uniform int blur : hint_range(0,10) = 1;
-uniform int bump : hint_range(0,100) = 10;
+uniform int blur : hint_range(0,10) = 5;
+uniform int bump : hint_range(0,100) = 60;
 
 uniform bool invertX = true;
 uniform bool invertY = true;
 uniform bool with_distance = true;
 uniform bool with_emboss = true;
+
+uniform sampler2D distanceTex;
 
 vec4 gray_scale(sampler2D TEXTURE, vec2 texCoord){
 	vec4  FragColor = texture(TEXTURE, texCoord);
@@ -21,41 +23,6 @@ vec4 borders(sampler2D TEXTURE, vec2 texCoord){
 	if(texCoord.x > 1.0 || texCoord.y > 1.0 || texCoord.x < 0.0 || texCoord.y < 0.0)
 		return vec4(0.0);
 	return vec4(vec3(float(texture(TEXTURE, texCoord).a != 0.0)),1.0);
-}
-
-float distT(sampler2D TEXTURE, vec2 texCoord, vec2 offset){
-
-	float dist = float(bump);
-	bool d1 = false, d2 = false, d3 = false, d4 = false;
-	for (int i=0; i<=bump ; i++){
-		d1 = (borders(TEXTURE, texCoord+vec2(float(i)*offset.x,0.0)).r == 0.0);
-		d2 = (borders(TEXTURE, texCoord-vec2(float(i)*offset.x,0.0)).r == 0.0);
-		d3 = (borders(TEXTURE, texCoord+vec2(0.0,float(i)*offset.y)).r == 0.0);
-		d4 = (borders(TEXTURE, texCoord-vec2(0.0,float(i)*offset.y)).r == 0.0);
-		if (d1 || d2 || d3 || d4){
-			dist = float(i);
-			break;
-		}
-	}
-	dist /= float(bump);
-	dist = sqrt(1.0-pow((dist-1.0),2.0));
-/**** Alternative distances algorithm (too slow) ****/
-//	float dist = sqrt(2.0)*float(bump);
-//	bool d1 = false, d2 = false, d3 = false, d4 = false;
-//	for (int i = 0; i <= bump; i++){
-//		for (int j = -i; j<=i; j++){
-//			d1 = (borders(TEXTURE, texCoord+vec2(float(i)*offset.x,float(j)*offset.y)).r == 0.0);
-//			d2 = (borders(TEXTURE, texCoord+vec2(-float(i)*offset.x,float(j)*offset.y)).r == 0.0);
-//			d3 = (borders(TEXTURE, texCoord+vec2(float(j)*offset.x,float(i)*offset.y)).r == 0.0);
-//			d4 = (borders(TEXTURE, texCoord+vec2(float(j)*offset.x,-float(i)*offset.y)).r == 0.0);
-//			if (d1 || d2 || d3 || d4){
-//				dist = min(dist,sqrt(pow(float(i),2.0)+pow(float(j),2.0)));
-//			}
-//		}
-//	} 
-//	dist /= sqrt(2.0)*float(bump);
-//	dist = sqrt(1.0-pow((dist-1.0),2.0));
-	return dist;
 }
 
 void fragment() {
@@ -80,15 +47,28 @@ void fragment() {
 				y1 += gray_scale(TEXTURE,UV+vec2(0.0,offset.y)+vec2(float(i)*offset.x,float(j)*offset.y)).r*coef;//(8.0*float(blur)+1.0);
 			}
 			if(with_distance){
-				distx0 += distT(TEXTURE,UV+vec2(-offset.x,0.0)+vec2(float(i)*offset.x,float(j)*offset.y),TEXTURE_PIXEL_SIZE)*coef;//(8.0*float(blur)+1.0);
-				distx1 += distT(TEXTURE,UV+vec2(offset.x,0.0)+vec2(float(i)*offset.x,float(j)*offset.y),TEXTURE_PIXEL_SIZE)*coef;//(8.0*float(blur)+1.0);
-				disty0 += distT(TEXTURE,UV+vec2(0.0,-offset.y)+vec2(float(i)*offset.x,float(j)*offset.y),TEXTURE_PIXEL_SIZE)*coef;//(8.0*float(blur)+1.0);
-				disty1 += distT(TEXTURE,UV+vec2(0.0,offset.y)+vec2(float(i)*offset.x,float(j)*offset.y),TEXTURE_PIXEL_SIZE)*coef;//(8.0*float(blur)+1.0);
+				distx0 += texture(distanceTex,UV+vec2(-offset.x,0.0)+vec2(float(i)*offset.x,float(j)*offset.y)).r*coef;//(8.0*float(blur)+1.0);
+				distx1 += texture(distanceTex,UV+vec2(offset.x,0.0)+vec2(float(i)*offset.x,float(j)*offset.y)).r*coef;//(8.0*float(blur)+1.0);
+				disty0 += texture(distanceTex,UV+vec2(0.0,-offset.y)+vec2(float(i)*offset.x,float(j)*offset.y)).r*coef;//(8.0*float(blur)+1.0);
+				disty1 += texture(distanceTex,UV+vec2(0.0,offset.y)+vec2(float(i)*offset.x,float(j)*offset.y)).r*coef;//(8.0*float(blur)+1.0);
 			}
 		}
 	}
 	x0 /= blur_den;	x1 /= blur_den;	y0 /= blur_den;	y1 /= blur_den;
-	distx0 /= blur_den;	distx1 /= blur_den;	disty0 /= blur_den;	disty1 /= blur_den;    float dx = (-2.0*float(invertX)+1.0)*(-x0+x1)*0.5/offset.x;
+	distx0 /= blur_den;	distx1 /= blur_den;	disty0 /= blur_den;	disty1 /= blur_den;
+	
+	distx0 = min(distx0 * 255.0 / float(bump),1.0);
+	distx1 = min(distx1 * 255.0 / float(bump),1.0);
+	disty0 = min(disty0 * 255.0 / float(bump),1.0);
+	disty1 = min(disty1 * 255.0 / float(bump),1.0);
+	
+	distx0 = sqrt(1.0-pow((distx0-1.0),2));
+	distx1 = sqrt(1.0-pow((distx1-1.0),2));
+	disty0 = sqrt(1.0-pow((disty0-1.0),2));
+	disty1 = sqrt(1.0-pow((disty1-1.0),2));
+	
+	float dx = (-2.0*float(invertX)+1.0)*(-x0+x1)*0.5/offset.x;
+
 	float dy = (-2.0*float(invertY)+1.0)*(-y0+y1)*0.5/offset.y;
 	vec3 normal = (normalize(vec3(dx*emboss_height,dy*emboss_height,1.0)));
 	vec4 tex = texture(TEXTURE, UV);
