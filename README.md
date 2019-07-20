@@ -4,9 +4,13 @@
 
 This plugin creates a dock that lets you open a texture and create a normal map for it adjusting a few controls. The normal map is exported in the same directory than the original texture, with a "*_n.png" prefix.
 
+## Contribute
+
+If you know how to use godot, any help is welcome! (Help is needed specially in GUI).
+The plugin is free and open source, but you can also support this (and other of my projects) by buying the pluging [here](https://azagaya.itch.io/godot-normal-map-generator).
+
 ## Screenshots
 
-![godot-normal-1](https://user-images.githubusercontent.com/46932830/61228887-7fa57f80-a6fd-11e9-9298-1cd42b5093d5.png)
-![godot-normal-2](https://user-images.githubusercontent.com/46932830/61228888-7fa57f80-a6fd-11e9-9897-5ee11bac15f1.png)
-
+![imagen](https://user-images.githubusercontent.com/46932830/61579103-28295a00-aad7-11e9-9813-41f5b315cdc8.png)
+![imagen](https://user-images.githubusercontent.com/46932830/61579107-36777600-aad7-11e9-9b81-18c18cb5820f.png)
 
