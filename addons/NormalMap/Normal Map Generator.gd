@@ -11,7 +11,7 @@ var distance_texture;
 
 func _ready():
 	texture_rect = $ViewportNormal/Normal
-	viewport = $GUI/ViewportContainer/Viewport
+	viewport = $GUI/VBoxContainer/ViewportContainer/Viewport
 	viewport.size = texture_rect.texture.get_size()
 	
 	$ViewportDistance.size = $ViewportDistance/Distance.texture.get_size()
@@ -22,13 +22,13 @@ func _ready():
 	
 	texture_rect.material.set_shader_param("distanceTex", distance_texture)
 	
-	light2d_node = $GUI/ViewportContainer/Viewport/TextureRect/Light2D
-	viewport_container_node = $GUI/ViewportContainer
-	$GUI/HBoxContainer_ColorPicker/ColorPickerButton.color = light2d_node.color
-	$GUI/ViewportContainer/Viewport/TextureRect.material.set_shader_param("normal_texture", $ViewportNormal.get_texture())
+	light2d_node = $GUI/VBoxContainer/ViewportContainer/Viewport/TextureRect/Light2D
+	viewport_container_node = $GUI/VBoxContainer/ViewportContainer
+	$GUI/VBoxContainer/HBoxContainer_ColorPicker/ColorPickerButton.color = light2d_node.color
+	$GUI/VBoxContainer/ViewportContainer/Viewport/TextureRect.material.set_shader_param("normal_texture", $ViewportNormal.get_texture())
 
 func _on_Normal_toggled(button_pressed):
-	$GUI/ViewportContainer/Viewport/TextureRect.material.set_shader_param("normal_preview",button_pressed)
+	$GUI/VBoxContainer/ViewportContainer/Viewport/TextureRect.material.set_shader_param("normal_preview",button_pressed)
 
 
 func _on_Emboss_toggled(button_pressed):
@@ -95,7 +95,7 @@ func _on_FileDialog_file_selected(path):
 		
 		distance_texture = $ViewportDistance.get_texture()
 
-		$GUI/ViewportContainer/Viewport/TextureRect.texture = itex
+		$GUI/VBoxContainer/ViewportContainer/Viewport/TextureRect.texture = itex
 		texture_rect.material.set_shader_param("distanceTex", distance_texture)
 		# Change viewport size to match the new image size
 		# Commented this out because i think viewports inside container cannot be resized...
@@ -121,7 +121,7 @@ func _input(event):
 				# First, convert the position so it is in a 0-1 range on both axis.
 				var light_pos = relative_mouse_pos / viewport_container_node.rect_size
 				# Multiple by the viewport size so the position is within viewport space.
-				light_pos *= $GUI/ViewportContainer/Viewport.size
+				light_pos *= $GUI/VBoxContainer/ViewportContainer/Viewport.size
 				# Finally, set the position.
 				light2d_node.global_position = light_pos
 
