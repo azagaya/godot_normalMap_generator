@@ -12,16 +12,16 @@ uniform bool with_emboss = true;
 
 uniform sampler2D distanceTex;
 
-vec4 gray_scale(sampler2D TEXTURE, vec2 texCoord){
-	vec4  FragColor = texture(TEXTURE, texCoord);
+vec4 gray_scale(sampler2D texture, vec2 texCoord){
+	vec4  FragColor = texture(texture, texCoord);
     float average = 0.2126 * FragColor.r + 0.7152 * FragColor.g + 0.0722 * FragColor.b;
     return vec4(average, average, average, 1.0);
 }
 
-vec4 borders(sampler2D TEXTURE, vec2 texCoord){
+vec4 borders(sampler2D texture, vec2 texCoord){
 	if(texCoord.x > 1.0 || texCoord.y > 1.0 || texCoord.x < 0.0 || texCoord.y < 0.0)
 		return vec4(0.0);
-	return vec4(vec3(float(texture(TEXTURE, texCoord).a != 0.0)),1.0);
+	return vec4(vec3(float(texture(texture, texCoord).a != 0.0)),1.0);
 }
 
 void fragment() {
