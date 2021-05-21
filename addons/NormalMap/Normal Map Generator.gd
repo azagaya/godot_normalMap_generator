@@ -1,17 +1,23 @@
 tool
 extends Control
 
-var texture_rect
-var viewport
 var current_path = "./generated.png"
-var light2d_node = null
-var viewport_container_node = null
+
+onready var light2d_node := $GUI/VBoxContainer/ViewportContainer/Viewport/TextureRect/Light2D
+onready var viewport_container_node := $GUI/VBoxContainer/ViewportContainer
+onready var texture_rect := $ViewportNormal/Normal
+onready var viewport := $GUI/VBoxContainer/ViewportContainer/Viewport
+onready var emboss_edit := $GUI/VBoxContainer/HBoxContainer3/SpinBox
+onready var emboss_slider := $"GUI/VBoxContainer/HBoxContainer3/Emboss Height"
+
+onready var bump_edit := $GUI/VBoxContainer/HBoxContainer4/BumpSpinBox
+onready var bump_slider := $"GUI/VBoxContainer/HBoxContainer4/Bump Height"
+
+
 var distance_texture;
 
 
 func _ready():
-	texture_rect = $ViewportNormal/Normal
-	viewport = $GUI/VBoxContainer/ViewportContainer/Viewport
 	viewport.size = texture_rect.texture.get_size()
 	
 	$ViewportDistance.size = $ViewportDistance/Distance.texture.get_size()
@@ -22,8 +28,6 @@ func _ready():
 	
 	texture_rect.material.set_shader_param("distanceTex", distance_texture)
 	
-	light2d_node = $GUI/VBoxContainer/ViewportContainer/Viewport/TextureRect/Light2D
-	viewport_container_node = $GUI/VBoxContainer/ViewportContainer
 	$GUI/VBoxContainer/HBoxContainer_ColorPicker/ColorPickerButton.color = light2d_node.color
 	$GUI/VBoxContainer/ViewportContainer/Viewport/TextureRect.material.set_shader_param("normal_texture", $ViewportNormal.get_texture())
 
@@ -37,6 +41,7 @@ func _on_Emboss_toggled(button_pressed):
 
 func _on_Emboss_Height_value_changed(value):
 	texture_rect.material.set_shader_param("emboss_height",value)
+	emboss_edit.value = value
 
 
 func _on_Bump_toggled(button_pressed):
@@ -45,6 +50,8 @@ func _on_Bump_toggled(button_pressed):
 
 func _on_Bump_Height_value_changed(value):
 	texture_rect.material.set_shader_param("bump_height",value)
+	bump_edit.value = value
+
 
 func _on_SpinBoxBlur_value_changed(value):
 	texture_rect.material.set_shader_param("blur",value)
@@ -133,3 +140,11 @@ func _on_ColorPickerButton_color_changed(color):
 
 func _on_SpinBoxLightScale_value_changed(value):
 	light2d_node.texture_scale = value
+
+
+func _on_SpinBox_value_changed(value):
+	emboss_slider.value = emboss_edit.value
+
+
+func _on_BumpSpinBox_value_changed(value):
+	bump_slider.value = value
